@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Weather Dashboard | Home{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Check the weather anywhere, instantly.</h1>
+      <p>Search for any city to see live conditions, air quality, and more in a clean, modern dashboard.</p>
+    </div>
+    <div class="hero-card glass">
+      <div class="hero-icon"><i class="fa-solid fa-globe"></i></div>
+      <form action="{{ url_for('weather_lookup') }}" method="post" class="search-form">
+        <label for="city" class="field-label">City</label>
+        <div class="field-group">
+          <span class="field-icon">
+            <i class="fa-solid fa-location-dot"></i>
+          </span>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            placeholder="e.g. London, New York, Tokyo"
+            required
+            autocomplete="off"
+          />
+        </div>
+        {% if error %}
+          <p class="error-text">{{ error }}</p>
+        {% endif %}
+        <button type="submit" class="primary-btn">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          Get forecast
+        </button>
+      </form>
+      <p class="helper-text">
+        Tip: Try including a country code for smaller towns, like <span>Paris, FR</span>.
+      </p>
+    </div>
+  </section>
+{% endblock %}
+

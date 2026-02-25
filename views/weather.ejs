@@ -1,0 +1,157 @@
+<%
+  if (typeof title === 'undefined') {
+    title = 'Weather Dashboard | ' + (typeof city !== 'undefined' ? city : 'Result');
+  }
+%>
+<section class="results-layout">
+  <div class="results-top">
+    <a href="/" class="ghost-btn">
+      <i class="fa-solid fa-chevron-left"></i>
+      Back
+    </a>
+    <form action="/weather" method="post" class="inline-search">
+      <div class="field-group compact">
+        <span class="field-icon">
+          <i class="fa-solid fa-location-dot"></i>
+        </span>
+        <input
+          type="text"
+          name="city"
+          placeholder="Search another city"
+          value="<%= typeof city !== 'undefined' ? city : '' %>"
+          required
+          autocomplete="off"
+        />
+      </div>
+      <button type="submit" class="primary-btn compact">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </form>
+  </div>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="error-banner">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span><%= error %></span>
+    </div>
+  <% } %>
+
+  <% if (typeof weather !== 'undefined' && weather) { %>
+    <% const current = weather.current; %>
+    <% const location = weather.location; %>
+
+    <div class="grid">
+      <article class="card primary glass">
+        <div class="card-header">
+          <div class="title">
+            <h2><%= location.name %>, <%= location.region || location.country %></h2>
+            <p><%= location.country %></p>
+          </div>
+          <div class="condition">
+            <% if (current.condition && current.condition.icon) { %>
+              <div class="condition-icon-wrap">
+                <img src="https:<%= current.condition.icon %>" alt="<%= current.condition.text %>" />
+              </div>
+            <% } %>
+            <span><%= current.condition ? current.condition.text : '' %></span>
+          </div>
+        </div>
+        <div class="temp-row">
+          <div class="temp-main">
+            <span class="temp-value"><%= Math.round(current.temp_c) %>°C</span>
+            <span class="temp-secondary"><%= Math.round(current.temp_f) %>°F</span>
+          </div>
+          <div class="meta">
+            <span><i class="fa-solid fa-temperature-arrow-up"></i> Feels like <%= Math.round(current.feelslike_c) %>°C</span>
+            <span><i class="fa-solid fa-clock"></i> <%= current.last_updated %></span>
+          </div>
+        </div>
+        <div class="chips">
+          <span class="chip"><i class="fa-solid fa-droplet"></i> Humidity <%= current.humidity %>%</span>
+          <span class="chip"><i class="fa-solid fa-wind"></i> Wind <%= current.wind_kph %> kph <%= current.wind_dir %></span>
+          <span class="chip"><i class="fa-solid fa-temperature-half"></i> Pressure <%= current.pressure_mb %> mb</span>
+        </div>
+      </article>
+
+      <article class="card glass">
+        <h3>
+          <span class="section-icon"><i class="fa-solid fa-sliders"></i></span>
+          Details
+        </h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-icon"><i class="fa-solid fa-cloud"></i></span>
+            <dl class="detail-content">
+              <dt>Cloud cover</dt>
+              <dd><%= current.cloud %>%</dd>
+            </dl>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon"><i class="fa-solid fa-sun"></i></span>
+            <dl class="detail-content">
+              <dt>UV index</dt>
+              <dd><%= current.uv %></dd>
+            </dl>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon"><i class="fa-solid fa-eye"></i></span>
+            <dl class="detail-content">
+              <dt>Visibility</dt>
+              <dd><%= current.vis_km %> km</dd>
+            </dl>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon"><i class="fa-solid fa-wind"></i></span>
+            <dl class="detail-content">
+              <dt>Wind gusts</dt>
+              <dd><%= current.gust_kph %> kph</dd>
+            </dl>
+          </div>
+        </div>
+      </article>
+
+      <% if (current.air_quality) { %>
+        <article class="card glass">
+          <h3>
+            <span class="section-icon"><i class="fa-solid fa-leaf"></i></span>
+            Air quality
+          </h3>
+          <div class="details-grid">
+            <div class="detail-item">
+              <span class="detail-icon"><i class="fa-solid fa-smog"></i></span>
+              <dl class="detail-content">
+                <dt>PM2.5</dt>
+                <dd><%= Number(current.air_quality.pm2_5).toFixed(1) %></dd>
+              </dl>
+            </div>
+            <div class="detail-item">
+              <span class="detail-icon"><i class="fa-solid fa-smog"></i></span>
+              <dl class="detail-content">
+                <dt>PM10</dt>
+                <dd><%= Number(current.air_quality.pm10).toFixed(1) %></dd>
+              </dl>
+            </div>
+            <div class="detail-item">
+              <span class="detail-icon"><i class="fa-solid fa-atom"></i></span>
+              <dl class="detail-content">
+                <dt>NO₂</dt>
+                <dd><%= Number(current.air_quality.no2).toFixed(1) %></dd>
+              </dl>
+            </div>
+            <div class="detail-item">
+              <span class="detail-icon"><i class="fa-solid fa-atom"></i></span>
+              <dl class="detail-content">
+                <dt>O₃</dt>
+                <dd><%= Number(current.air_quality.o3).toFixed(1) %></dd>
+              </dl>
+            </div>
+          </div>
+          <p class="helper-text">
+            <i class="fa-solid fa-info-circle"></i>
+            Air quality values from WeatherAPI in μg/m³.
+          </p>
+        </article>
+      <% } %>
+    </div>
+  <% } %>
+</section>
